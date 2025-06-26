@@ -1,0 +1,31 @@
+# Travelling Salesman Problem Implementation
+
+import itertools
+
+def calculate_distance(city1, city2):
+    # Placeholder for distance calculation logic
+    return ((city1[0] - city2[0]) ** 2 + (city1[1] - city2[1]) ** 2) ** 0.5
+
+def total_distance(route, distance_matrix):
+    return sum(distance_matrix[route[i]][route[i + 1]] for i in range(len(route) - 1))
+
+def travelling_salesman_problem(cities):
+    n = len(cities)
+    distance_matrix = [[calculate_distance(cities[i], cities[j]) for j in range(n)] for i in range(n)]
+    
+    min_route = None
+    min_distance = float('inf')
+    
+    for route in itertools.permutations(range(n)):
+        current_distance = total_distance(route, distance_matrix)
+        if current_distance < min_distance:
+            min_distance = current_distance
+            min_route = route
+            
+    return min_route, min_distance
+
+# Example usage
+cities = [(0, 0), (1, 1), (2, 2), (3, 3)]
+best_route, best_distance = travelling_salesman_problem(cities)
+print("Best route:", best_route)
+print("Best distance:", best_distance)
