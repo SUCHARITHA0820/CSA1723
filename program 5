@@ -1,0 +1,49 @@
+# Missionaries and Cannibals Problem
+
+from collections import deque
+
+def is_valid(state):
+    m_left, c_left, m_right, c_right = state
+    if m_left < 0 or c_left < 0 or m_right < 0 or c_right < 0:
+        return False
+    if (m_left < c_left and m_left > 0) or (m_right < c_right and m_right > 0):
+        return False
+    return True
+
+def get_neighbors(state):
+    m_left, c_left, m_right, c_right, boat = state
+    neighbors = []
+    if boat == 'left':
+        for m, c in [(1, 0), (0, 1), (1, 1), (2, 0), (0, 2)]:
+            new_state = (m_left - m, c_left - c, m_right + m, c_right + c, 'right')
+            if is_valid(new_state):
+                neighbors.append(new_state)
+    else:
+        for m, c in [(1, 0), (0, 1), (1, 1), (2, 0), (0, 2)]:
+            new_state = (m_left + m, c_left + c, m_right - m, c_right - c, 'left')
+            if is_valid(new_state):
+                neighbors.append(new_state)
+    return neighbors
+
+def bfs():
+    initial_state = (3, 3, 0, 0, 'left')
+    goal_state = (0, 0, 3, 3, 'right')
+    queue = deque([initial_state])
+    visited = set()
+    visited.add(initial_state)
+
+    while queue:
+        current_state = queue.popleft()
+        if current_state == goal_state:
+            return True
+        for neighbor in get_neighbors(current_state):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+    return False
+
+if __name__ == "__main__":
+    if bfs():
+        print("Solution found!")
+    else:
+        print("No solution exists.")
